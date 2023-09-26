@@ -6,27 +6,7 @@ yellow='\033[0;33m'
 plain='\033[0m'
 
 version="v1.0.0"
-install_certbot() {
-    # 安装 Certbot
-    if [[ x"${release}" == x"ubuntu" || x"${release}" == x"debian" ]]; then
-        apt-get -y install certbot
-    elif [[ x"${release}" == x"centos" ]]; then
-        yum -y install certbot
-    else
-        echo -e "${red}不支持的操作系统${plain}"
-        exit 1
-    fi
-}
 
-get_ssl_cert() {
-    # 获取 SSL 证书
-    echo -e "${green}开始获取 SSL 证书${plain}"
-    certbot certonly --standalone -d yourdomain.com -m your-email@example.com --agree-tos
-    if [[ $? != 0 ]]; then
-        echo -e "${red}获取 SSL 证书失败，请检查您的域名和邮箱配置${plain}"
-        exit 1
-    fi
-}
 # check root
 [[ $EUID -ne 0 ]] && echo -e "${red}错误: ${plain} 必须使用root用户运行此脚本！\n" && exit 1
 
@@ -426,20 +406,10 @@ show_menu() {
  ${green}11.${plain} 一键安装 bbr (最新内核)
  ${green}12.${plain} 查看 XrayR 版本 
  ${green}13.${plain} 升级维护脚本
- ${green}14.${plain} 获取 SSL 证书
  "
  #后续更新可加入上方字符串中
     show_status
-    echo && read -p "请输入选择 [0-14]: " num
-
-    case "${num}" in
-        # ...（之前的菜单项）
-        14) install_certbot && get_ssl_cert
-        ;;
-        *) echo -e "${red}请输入正确的数字 [0-14]${plain}"
-        ;;
-    esac
-}
+    echo && read -p "请输入选择 [0-13]: " num
 
     case "${num}" in
         0) config
